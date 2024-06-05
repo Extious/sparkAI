@@ -7,13 +7,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/websocket"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/gorilla/websocket"
 )
 
 /*
@@ -23,7 +24,7 @@ import (
 */
 
 var (
-	hostUrl   = "wss://aichat.xf-yun.com/v1/chat"
+	hostUrl   = "wss://spark-api.xf-yun.com/v3.1/chat"
 	appid     = "5251db73"
 	apiSecret = "MjVhMzQxYTZiZmI3NzMwYjg5YzRmNmUw"
 	apiKey    = "aba8b3cfac58be27f337daab27154cdc"
@@ -31,7 +32,7 @@ var (
 
 func main() {
 	d := websocket.Dialer{
-		HandshakeTimeout: 5 * time.Second,
+		HandshakeTimeout: 3 * time.Second,
 	}
 	//握手并建立websocket 连接
 	conn, resp, err := d.Dial(assembleAuthUrl1(hostUrl, apiKey, apiSecret), nil)
@@ -106,6 +107,7 @@ func main() {
 func genParams1(appid, question string) map[string]interface{} { // 根据实际情况修改返回的数据结构和字段名
 
 	messages := []Message{
+		{Role: "system", Content: "你是赵展的人工智能助手，你将回答用户提出的问题。赵展是一名华中科技大学本科生。"},
 		{Role: "user", Content: question},
 	}
 
@@ -115,7 +117,7 @@ func genParams1(appid, question string) map[string]interface{} { // 根据实际
 		},
 		"parameter": map[string]interface{}{ // 根据实际情况修改返回的数据结构和字段名
 			"chat": map[string]interface{}{ // 根据实际情况修改返回的数据结构和字段名
-				"domain":      "general",    // 根据实际情况修改返回的数据结构和字段名
+				"domain":      "generalv3",  // 根据实际情况修改返回的数据结构和字段名
 				"temperature": float64(0.8), // 根据实际情况修改返回的数据结构和字段名
 				"top_k":       int64(6),     // 根据实际情况修改返回的数据结构和字段名
 				"max_tokens":  int64(2048),  // 根据实际情况修改返回的数据结构和字段名
